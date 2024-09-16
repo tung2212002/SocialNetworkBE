@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CityDto {
-    Long id;
+    Integer id;
 
     String name;
 
@@ -21,5 +21,5 @@ public class CityDto {
 
     String type;
 
-    Integer cityId;
+    Long cityId;
 }

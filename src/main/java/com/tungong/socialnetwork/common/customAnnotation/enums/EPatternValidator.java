@@ -17,8 +17,9 @@ public enum EPatternValidator {
 
     STRONG_PASSWORD( "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!*()]).{8,}$", "Password: Must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters."),
     ORDER_BY("(?i)^(ASC|DESC)$", "Order by: Must be a valid order by or not."),
-    SORT_BY("(?i)^(createAt|updateAt)$", "Sort by: Must be a valid sort by or not."),
-    GENDER("(?i)^(MALE|FEMALE|OTHER)$", "Gender: Must be a valid genre or not.");
+    SORT_BY("(?i)^(createdAt|updatedAt)$", "Sort by: Must be a valid sort by or not."),
+    GENDER("(?i)^(MALE|FEMALE|OTHER)$", "Gender: Must be a valid genre or not."),
+    POST_STATUS("(?i)^(PUBLIC|PRIVATE|FRIEND)$", "Post status: Must be a valid post status or not.");
 
     @Getter
     private final String pattern;
