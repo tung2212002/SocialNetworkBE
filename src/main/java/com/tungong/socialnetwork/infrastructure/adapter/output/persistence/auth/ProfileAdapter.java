@@ -6,7 +6,7 @@ import com.tungong.socialnetwork.domain.model.user.User;
 import com.tungong.socialnetwork.infrastructure.adapter.output.repository.ProfileRepository;
 import com.tungong.socialnetwork.infrastructure.adapter.output.repository.UserRepository;
 import com.tungong.socialnetwork.infrastructure.payload.dto.user.ProfileStateDto;
-import com.tungong.socialnetwork.infrastructure.payload.mapper.UserMapperETD;
+import com.tungong.socialnetwork.infrastructure.mapper.UserMapperETD;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

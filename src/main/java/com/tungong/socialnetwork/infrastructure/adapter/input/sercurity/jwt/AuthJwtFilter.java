@@ -1,5 +1,6 @@
 package com.tungong.socialnetwork.infrastructure.adapter.input.sercurity.jwt;
 
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +27,12 @@ public class AuthJwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader("Authorization");
+        System.out.println("authorizationHeader: " + authorizationHeader);
+        final DeviceInfoDto device = DeviceInfoDto.builder()
+                .agent(request.getHeader("User-Agent"))
+                .ip(request.getRemoteAddr())
+                .fingerprinting(request.getHeader("Fingerprinting"))
+                .build();
 
         String jwt = null;
         String email = null;
@@ -40,7 +47,7 @@ public class AuthJwtFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if (jwtUtils.isValidToken(jwt)) {
+            if (jwtUtils.isValidToken(jwt, email, device)) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

@@ -24,17 +24,21 @@ public class DeviceEntity {
 
     String fingerprinting;
 
+    String agent;
+
+    String ip;
+
     String deviceInfo;
 
     @Enumerated(EnumType.STRING)
-    EDeviceTypeEntity deviceType;
+    EDeviceTypeEntity deviceType = EDeviceTypeEntity.NORMAL;
 
     Instant createdAt;
 
     Instant updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JoinColumn(name = "user_id")
     UserEntity userEntity;
 
     @PrePersist

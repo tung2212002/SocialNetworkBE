@@ -10,4 +10,7 @@ import lombok.experimental.FieldDefaults;
 public class CheckOtpRequest {
     @NotBlank(message = "Otp cannot be blank")
     String otp;
+
+    @NotBlank(message = "Email cannot be blank")
+    String email;
 }

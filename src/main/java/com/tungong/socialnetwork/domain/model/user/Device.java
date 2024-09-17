@@ -18,6 +18,10 @@ public class Device {
 
     String fingerprinting;
 
+    String agent;
+
+    String ip;
+
     String deviceInfo;
 
     EDeviceType deviceType;
@@ -25,12 +29,4 @@ public class Device {
     Instant createdAt;
 
     Instant updatedAt;
-
-    public Device(Long userId, String fingerprinting, String deviceInfo, EDeviceType deviceType) {
-        this.userId = userId;
-        this.fingerprinting = fingerprinting;
-        this.deviceInfo = deviceInfo;
-        this.deviceType = deviceType;
-        this.createdAt = Instant.now();
-    }
 }

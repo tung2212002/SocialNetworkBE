@@ -3,7 +3,6 @@ package com.tungong.socialnetwork.infrastructure.adapter.output.repository.redis
 import com.tungong.socialnetwork.application.port.output.redis.RedisPort;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +16,8 @@ public class RedisRepository<K, V> implements RedisPort<K, V> {
 
     private  String keyPrefix;
 
+    private Integer expireTime;
+
     protected K getKey(K key) {
         return (K) (keyPrefix + "_" + key);
     }
@@ -27,6 +28,11 @@ public class RedisRepository<K, V> implements RedisPort<K, V> {
     }
 
     @Override
+    public V getFullKey(K key) {
+        return redisTemplate.opsForValue().get(key);
+    }
+
+    @Override
     public V get(K key) {
         return redisTemplate.opsForValue().get(getKey(key));
     }
@@ -34,6 +40,11 @@ public class RedisRepository<K, V> implements RedisPort<K, V> {
     @Override
     public void delete(K key) {
         redisTemplate.delete(getKey(key));
+    }
+
+    @Override
+    public void deleteFullKey(K key) {
+        redisTemplate.delete(key);
     }
 
     @Override
@@ -54,6 +65,26 @@ public class RedisRepository<K, V> implements RedisPort<K, V> {
     }
 
     @Override
+    public boolean createWithTTL(K key, V value) {
+        TimeUnit timeUnit = TimeUnit.SECONDS;
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(getKey(key), value, expireTime, timeUnit);
+        V v = redisTemplate.opsForValue().get(getKey(key));
+        return result != null && result;
+    }
+
+    @Override
+    public boolean update(K key, V value) {
+        redisTemplate.opsForValue().getAndSet(getKey(key), value);
+        return true;
+    }
+
+    @Override
+    public boolean updateFullKey(K key, V value) {
+        redisTemplate.opsForValue().getAndSet(key, value);
+        return true;
+    }
+
+    @Override
     public List<K> getAllKeyByPattern(String pattern) {
         Set<K> keys = redisTemplate.keys((K) pattern);
         return keys != null && !keys.isEmpty() ? new ArrayList<>(keys) : Collections.emptyList();
@@ -66,6 +97,7 @@ public class RedisRepository<K, V> implements RedisPort<K, V> {
 
     @Override
     public List<K> getAllKeyByPrefix(String prefix) {
+        System.out.println(getKey((K) prefix) + "*");
         return getAllKeyByPattern(getKey((K) prefix) + "*");
     }
 

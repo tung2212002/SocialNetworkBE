@@ -39,28 +39,28 @@ public class ProfileEntity {
 
     String bio;
 
-    Boolean isBirthDatePublic;
+    Boolean isBirthDatePublic = true;
 
-    Boolean isPhoneNumberPublic;
+    Boolean isPhoneNumberPublic = true;
 
-    Boolean isGenderPublic;
+    Boolean isGenderPublic = true;
 
-    Boolean isAddressPublic;
+    Boolean isAddressPublic = true;
 
-    Boolean isCityPublic;
+    Boolean isCityPublic = true;
 
-    Boolean isDistrictPublic;
+    Boolean isDistrictPublic = true;
 
-    Boolean isSchoolPublic;
+    Boolean isSchoolPublic = true;
 
-    Boolean isJobPublic;
+    Boolean isJobPublic = true;
 
-    Boolean isCompanyPublic;
+    Boolean isCompanyPublic = true;
 
-    Boolean isBioPublic;
+    Boolean isBioPublic = true;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "user_id", nullable = false)
-    UserEntity user;
+    UserEntity userEntity;
 }

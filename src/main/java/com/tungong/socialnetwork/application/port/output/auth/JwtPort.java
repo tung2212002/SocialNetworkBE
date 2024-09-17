@@ -1,19 +1,26 @@
 package com.tungong.socialnetwork.application.port.output.auth;
 
+import com.tungong.socialnetwork.domain.model.user.User;
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Map;
 
 public interface JwtPort {
-    String generateToken(UserDetails userDetails, String fingerprinting);
+    Boolean isValidToken(String token, String email, DeviceInfoDto device);
 
-    String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, String fingerprinting);
+    Boolean isValidRefreshToken(String token, DeviceInfoDto device);
 
-    String generateRefreshToken(UserDetails userDetails, String fingerprinting);
+    String generateToken(User user, DeviceInfoDto device);
+
+
+    String generateRefreshToken(User user, DeviceInfoDto device);
+
 
     boolean isTokenValid(String token, UserDetails userDetails);
 
-    String extractUserEmail(String token);
+
+    String extractEmail(String token);
 
     String extractFingerprinting(String token);
 

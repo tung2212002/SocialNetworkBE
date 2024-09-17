@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 public class RedisAccessTokenRepository extends RedisRepository<String, TokenDto> {
     private static final String KEY = "ACCESS_TOKEN";
 
+    private static final Integer EXPIRE_TIME = 60 * 5;
+
     public RedisAccessTokenRepository(@Qualifier("tokenRedisTemplate") RedisTemplate<String, TokenDto> redisTemplate) {
-        super(redisTemplate, KEY);
+        super(redisTemplate, KEY, EXPIRE_TIME);
     }
 }

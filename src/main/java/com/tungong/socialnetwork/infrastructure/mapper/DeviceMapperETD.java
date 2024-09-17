@@ -10,19 +10,21 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface DeviceMapperETD {
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "userId", source = "userEntity.id")
     @Mapping(target = "deviceType", source = "deviceType", qualifiedByName = "mapDeviceTypeToDomain")
     Device toDomain(DeviceEntity entity);
 
-    DeviceEntity toEntity(Device dto);
+    @Mapping(target = "deviceType", source = "deviceType", qualifiedByName = "mapDeviceTypeToEntity")
+    DeviceEntity toEntity(Device device);
 
-    @Named("mapDeviceType")
-    default EDeviceType mapDeviceType(EDeviceTypeEntity deviceTypeEntity) {
-        if (deviceTypeEntity == null) {
+    @Named("mapDeviceTypeToEntity")
+    default EDeviceTypeEntity mapDeviceTypeToEntity(EDeviceType deviceType) {
+        if (deviceType == null) {
             return null;
         }
-        return EDeviceType.valueOf(deviceTypeEntity.name());
+        return EDeviceTypeEntity.valueOf(deviceType.name());
     }
 
     @Named("mapDeviceTypeToDomain")

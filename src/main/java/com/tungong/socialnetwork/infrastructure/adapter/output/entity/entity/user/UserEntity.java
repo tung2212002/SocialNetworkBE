@@ -59,6 +59,9 @@ public class UserEntity {
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<DeviceEntity> devices;
 
+    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    ProfileEntity profile;
+
 //    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    List<PostEntity> posts;
 
@@ -87,6 +90,16 @@ public class UserEntity {
     @PrePersist
     public void prePersist() {
         this.createdAt = Instant.now();
+        if (this.status == null) {
+            this.status = EUserStatusEntity.ACTIVE;
+        }
+        if (this.role == null) {
+            this.role = EUserRoleEntity.USER;
+        }
+        if (this.profile == null) {
+            this.profile = new ProfileEntity();
+            this.profile.setUserEntity(this);
+        }
     }
 
     @PreUpdate

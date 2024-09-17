@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handleRuntimeException(Exception e) {
-        log.error("Exception");
+        log.error("Exception" + e);
         ErrorCode errorCode = ErrorCode.EXCEPTION_ERROR;
 
         ApiResponse apiResponse = ApiResponse.builder()
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
 
         ApiResponse apiResponse = ApiResponse.builder()
                 .code(errorCode.getCode())
-                .message(errors.get(errors.get(0)))
+                .message(errorCode.getMessage())
                 .build();
 
         return ResponseEntity.status(errorCode.getHttpStatus()).body(apiResponse);

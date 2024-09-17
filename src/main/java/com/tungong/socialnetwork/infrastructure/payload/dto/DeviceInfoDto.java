@@ -8,11 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TokenDto {
-    String token;
-    Long expiresIn;
-    String tokenType = "Bearer";
-    String ip = "";
-    String fingerprinting = "";
-    String agent = "";
+public class DeviceInfoDto {
+    String ip;
+    String fingerprinting;
+    String agent;
 }

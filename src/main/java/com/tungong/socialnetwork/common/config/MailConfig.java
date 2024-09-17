@@ -34,7 +34,6 @@ public class MailConfig {
         mailSender.setUsername(email);
         mailSender.setPassword(password);
         mailSender.setDefaultEncoding("UTF-8");
-        mailSender.setUsername("SocialNetwork");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
@@ -42,7 +41,7 @@ public class MailConfig {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.ssl.enable", isSSL);
         props.put("mail.smtp.from", email);
-        props.put("mail.debug", "true");
+        props.put("mail.debug", "false");
 
         return mailSender;
     }

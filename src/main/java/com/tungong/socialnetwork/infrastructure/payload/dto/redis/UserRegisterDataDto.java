@@ -16,8 +16,10 @@ public class UserRegisterDataDto {
 
     String otp;
 
+    String ip;
+
     String fingerprinting;
 
-    String userAgent;
+    String agent;
 
 }

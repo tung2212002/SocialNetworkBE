@@ -1,7 +1,11 @@
 package com.tungong.socialnetwork.infrastructure.adapter.input.sercurity.jwt;
 
+import com.tungong.socialnetwork.application.port.output.auth.JwtPort;
+import com.tungong.socialnetwork.domain.model.user.User;
 import com.tungong.socialnetwork.infrastructure.adapter.output.repository.redis.RedisAccessTokenRepository;
 import com.tungong.socialnetwork.infrastructure.adapter.output.repository.redis.RedisRefreshTokenRepository;
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
+import com.tungong.socialnetwork.infrastructure.payload.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -21,7 +25,7 @@ import java.util.function.Function;
 @Component
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
-public class JwtUtils {
+public class JwtUtils implements JwtPort {
     @Value("${jwt.secretKey}")
     String secretKey;
 
@@ -56,30 +60,52 @@ public class JwtUtils {
                 .getPayload();
     }
 
-    public Boolean isValidToken(String token) {
-        return redisAccessTokenRepository.get(token) != null || redisRefreshTokenRepository.get(token) != null;
+    @Override
+    public Boolean isValidToken(String token, String email, DeviceInfoDto device) {
+        TokenDto tokenDto = redisAccessTokenRepository.get(email + "_" + token);
+        return tokenDto != null && tokenDto.getAgent().equals(device.getAgent()) && tokenDto.getIp().equals(device.getIp()) && tokenDto.getFingerprinting().equals(device.getFingerprinting());
     }
 
-    public String generateToken(UserDetails userDetails, String fingerprinting) {
-        Map<String, Object> claims = Map.of("fingerprinting", fingerprinting);
-        return buildToken(claims, userDetails, expiration);
+    @Override
+    public Boolean isValidRefreshToken(String token, DeviceInfoDto device) {
+        String email = extractEmail(token);
+        if (email == null) return false;
+        TokenDto tokenDto = redisRefreshTokenRepository.get(email + "_" + token);
+        return tokenDto != null && tokenDto.getAgent().equals(device.getAgent()) && tokenDto.getIp().equals(device.getIp()) && tokenDto.getFingerprinting().equals(device.getFingerprinting());
+    }
+
+    @Override
+    public String generateToken(User user, DeviceInfoDto device) {
+        return buildToken(buildClaims(device), user, expiration);
 
     }
 
-    public String generateRefreshToken(UserDetails userDetails, String fingerprinting) {
-        Map<String, Object> claims = Map.of("fingerprinting", fingerprinting);
-        return buildToken(claims, userDetails, refreshExpiration);
+
+    @Override
+    public String generateRefreshToken(User user, DeviceInfoDto device) {
+        Map<String, Object> claims = buildClaims(device);
+        return buildToken(claims, user, refreshExpiration);
     }
+
+    private Map<String, Object> buildClaims(DeviceInfoDto device) {
+        return Map.of("fingerprinting", device.getFingerprinting(), "agent", device.getAgent(), "ip", device.getIp());
+    }
+
+    @Override
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        return false;
+    }
+
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            User user,
             long expiration
     ) {
         return Jwts
                 .builder()
                 .claims(extraClaims)
-                .subject(userDetails.getUsername())
+                .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(generateSecretKey())
@@ -88,5 +114,10 @@ public class JwtUtils {
 
     public String extractFingerprinting(String token) {
         return extractClaim(token, claims -> claims.get("fingerprinting", String.class));
+    }
+
+    @Override
+    public boolean isValidJwtFormat(String token) {
+        return false;
     }
 }

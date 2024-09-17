@@ -1,9 +1,19 @@
 package com.tungong.socialnetwork.application.port.output.auth;
 
-public interface OtpPort {
-    void validateOtp(String email, String providedOtp, int maxAttempts, long timeInterval);
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
+import com.tungong.socialnetwork.infrastructure.payload.dto.redis.UserRegisterDataDto;
+import com.tungong.socialnetwork.infrastructure.payload.request.auth.RegisterRequest;
 
-    void saveOtp(String email, String otp);
+public interface OtpPort {
+    UserRegisterDataDto getOtpData(String email, String otp, DeviceInfoDto device);
+
+    void deleteAllOtpDataForEmail(String email);
+
+    void deleteOtpData(String email,DeviceInfoDto device);
+
+    void incrementOtpDataCount(String email, DeviceInfoDto device);
+
+    void saveOtp(RegisterRequest registerRequest, String otp, DeviceInfoDto device);
 
     String generateOtp();
 

@@ -1,6 +1,9 @@
 package com.tungong.socialnetwork.common.config;
 
+import com.tungong.socialnetwork.domain.model.user.Device;
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
 import com.tungong.socialnetwork.infrastructure.payload.dto.TokenDto;
+import com.tungong.socialnetwork.infrastructure.payload.dto.redis.UserRegisterDataDto;
 import com.tungong.socialnetwork.infrastructure.payload.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +50,18 @@ public class RedisConfig {
     public RedisTemplate<String, UserDto> userRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
         return createRedisTemplate(redisConnectionFactory, UserDto.class);
     }
+
+    @Bean
+    public RedisTemplate<String, UserRegisterDataDto> userRegisterRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        return createRedisTemplate(redisConnectionFactory, UserRegisterDataDto.class);
+    }
+
+    @Bean
+    public RedisTemplate<String, DeviceInfoDto> deviceRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        return createRedisTemplate(redisConnectionFactory, DeviceInfoDto.class);
+    }
+
+
     private <T> RedisTemplate<String, T> createRedisTemplate(RedisConnectionFactory redisConnectionFactory, Class<T> classType) {
         RedisTemplate<String, T> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);

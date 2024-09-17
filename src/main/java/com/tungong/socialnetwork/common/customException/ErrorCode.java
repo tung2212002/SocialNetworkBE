@@ -27,6 +27,11 @@ public enum ErrorCode {
     NOT_ACCESS(1009, "Not access", HttpStatus.FORBIDDEN),
     ACTION_HAS_BEEN_DONE_PREVIOUSLY_BY_THIS_USER(1010, "Action has been done previously by this user", HttpStatus.BAD_REQUEST),
     RESOURCE_NOT_FOUND(1011, "Resource not found", HttpStatus.NOT_FOUND),
+    NOT_FOUND(1012, "Not found", HttpStatus.NOT_FOUND),
+    INVALID_REQUEST(1013, "Invalid request", HttpStatus.BAD_REQUEST),
+    MAXIMUM_NUMBER_REQUEST_OTP(1014, "Maximum number request otp", HttpStatus.BAD_REQUEST),
+    EMAIL_NOT_EXISTED(1015, "Email not existed", HttpStatus.BAD_REQUEST),
+    AUTHENTICATION_FAILED(1016, "Password is incorrect", HttpStatus.BAD_REQUEST),
     ;
 
 

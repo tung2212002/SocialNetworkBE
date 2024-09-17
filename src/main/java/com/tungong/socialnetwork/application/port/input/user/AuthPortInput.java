@@ -1,5 +1,6 @@
 package com.tungong.socialnetwork.application.port.input.user;
 
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
 import com.tungong.socialnetwork.infrastructure.payload.dto.user.UserDto;
 import com.tungong.socialnetwork.infrastructure.payload.request.auth.*;
 import com.tungong.socialnetwork.infrastructure.payload.response.auth.RefreshTokenResponse;
@@ -10,13 +11,13 @@ import java.io.UnsupportedEncodingException;
 public interface AuthPortInput {
     int MAX_COUNT_OTP = 3;
 
-    UserDto authenticate(AuthRequest authRequest, String userAgent, String fingerprinting);
+    Object authenticate(AuthRequest authRequest, DeviceInfoDto device);
 
-    String register(RegisterRequest registerRequest, String userAgent, String fingerprinting) throws MessagingException, UnsupportedEncodingException;
+    String register(RegisterRequest registerRequest, DeviceInfoDto device) throws MessagingException, UnsupportedEncodingException;
 
     String changePassword(ChangePasswordRequest changePasswordRequest);
 
-    UserDto checkOtpRegister(RegisterRequest registerRequest, String userAgent, String fingerprinting, int attemptCount, Long timeInterval);
+    String checkOtpRegister(CheckOtpRequest checkOtpRequest, DeviceInfoDto device, int attemptCount, Long timeInterval);
 
     String checkOtpForgotPassword(ForgotPasswordRequest forgotPasswordRequest, int attemptCount, Long timeInterval);
 
@@ -26,7 +27,9 @@ public interface AuthPortInput {
 
     String deleteAccount() throws MessagingException, UnsupportedEncodingException;
 
-    RefreshTokenResponse refreshToken(String refreshTokenRequest, String fingerprinting);
+    RefreshTokenResponse refreshToken(String refreshTokenRequest, String agent,String ip, String fingerprinting);
 
-    String checkSuccessDevice(String key, String userAgent, String fingerprinting);
+    UserDto verifyToken();
+
+    String checkSuccessDevice(String key, String agent, String ip, String fingerprinting);
 }

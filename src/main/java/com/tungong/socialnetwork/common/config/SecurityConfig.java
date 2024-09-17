@@ -34,8 +34,7 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthJwtFilter authJwtFilter;
 
-    private final String[] PUBLIC_URLS = {
-            "/api/v1/auth/**",
+    private final String[] GET_PUBLIC_URLS = {
             "/api/v1/search",
             "/api/v1/user/**",
             "/api/v1/profile/**",
@@ -46,6 +45,12 @@ public class SecurityConfig {
             "/api/v1/post/comment/{commentId}/reply",
             "/api/v1/reaction/post/{postId}",
             "/api/v1/reaction/comment/{commentId}"
+    };
+
+    private final String[] POST_PUBLIC_URLS = {
+            "/api/v1/auth/authentication",
+            "/api/v1/auth/register",
+            "/api/v1/auth/register/check-otp",
     };
 
     @Bean
@@ -69,21 +74,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers(HttpMethod.GET, PUBLIC_URLS).permitAll()
-                                .anyRequest().authenticated()
-
-                )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 )
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers(HttpMethod.GET, GET_PUBLIC_URLS).permitAll()
+                                .requestMatchers(HttpMethod.POST, POST_PUBLIC_URLS).permitAll()
+                                .anyRequest().authenticated()
+
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

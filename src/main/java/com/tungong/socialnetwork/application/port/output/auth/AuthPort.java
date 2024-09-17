@@ -3,41 +3,41 @@ package com.tungong.socialnetwork.application.port.output.auth;
 
 import com.tungong.socialnetwork.domain.model.user.User;
 import com.tungong.socialnetwork.infrastructure.adapter.input.sercurity.service.UserDetailsImpl;
+import com.tungong.socialnetwork.infrastructure.payload.dto.DeviceInfoDto;
 import com.tungong.socialnetwork.infrastructure.payload.dto.TokenDto;
-import org.antlr.v4.runtime.Token;
 import org.springframework.data.util.Pair;
 
 import java.util.Map;
 import java.util.Set;
 
 public interface AuthPort {
-    User findByEmail(String input);
+    User getByEmail(String email);
 
-    User saveUser(User userEntity);
+    User saveUser(User user);
 
-    Boolean existsUserByUserEmail(String userEmail);
+    Boolean existsUserByUserEmail(String email);
 
     void changePassword(String newPassword, Long id);
 
-    Token findByToken(String jwt, String email);
+    TokenDto getTokenValid(String jwt, String email);
 
     void deleteUserByEmail(String email);
 
     User getUserById(Long id);
 
-    User getUserByIdOrDefault(Long id);
-
     User getUserAuth();
 
-    User getUserAuthOrDefaultVirtual();
-
-    UserDetailsImpl getUserDetails(User user);
+    Boolean isValidRefreshToken(String refreshToken, DeviceInfoDto device);
 
     Pair<UserDetailsImpl, String> refreshToken(String refreshToken, String fingerprinting);
 
-    void saveRefreshTokenInRedis(String token, String fingerprinting, UserDetailsImpl userDetails);
+    void revokeAllRefreshToken(User user, DeviceInfoDto device);
 
-    void saveAllAccessTokenInRedis(String userEmail, Set<Map<String, TokenDto>> tokenEntities);
+    void saveRefreshToken(User user, DeviceInfoDto device, String refreshToken);
 
-    void saveAllAccessTokenInRedis(UserDetailsImpl userDetails, Set<Map<String, TokenDto>> tokenEntities);
+    void saveAccessToken(User user, DeviceInfoDto device, String accessToken);
+
+    void revokeAllAccessToken(User user, DeviceInfoDto device);
+
+    void revokeAllToken(User user, DeviceInfoDto device);
 }
